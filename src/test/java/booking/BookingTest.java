@@ -4,6 +4,7 @@ import booking.pojo.BookingDates;
 import booking.pojo.CreateBookingPojo;
 import io.restassured.RestAssured;
 import io.restassured.http.ContentType;
+import io.restassured.path.json.JsonPath;
 import io.restassured.response.Response;
 import org.testng.Assert;
 import org.testng.annotations.DataProvider;
@@ -22,10 +23,14 @@ public class BookingTest {
     public void createBooking(CreateBookingPojo createBookingPojo) throws IOException {
         ExtentReportManager.logInfo("Starting the test");
         //Map<String,Object> payLoad=Payloads.getCreateBookingPayloadAsMap("Jim","Brown",111);
-        CreateBookingPojo payLoad = Payloads.createPayloadAsPojo(createBookingPojo.getFirstname()
-        ,createBookingPojo.getLastname(),createBookingPojo.getTotalprice(),createBookingPojo.getBookingdates());
-        Response response = BookingApi.createBooking(payLoad);
+       /* CreateBookingPojo payLoad = Payloads.createPayloadAsPojo(createBookingPojo.getFirstname()
+        ,createBookingPojo.getLastname(),createBookingPojo.getTotalprice(),createBookingPojo.getBookingdates());*/
+
+        Response response = BookingApi.createBooking(createBookingPojo);
         Assert.assertEquals(response.statusCode(), 200);
+        JsonPath jsonPath=response.jsonPath();
+        String firstName=jsonPath.getString("booking.firstname");
+        Assert.assertEquals(firstName,"Jim");
         ExtentReportManager.logPass("Test is passed");
 
     }
